@@ -1,4 +1,3 @@
-
 SELECT EVENT_TIME                                   as EVENT_TIME,
        AGENT_ID                                     as AID,
        --parent process attributes
@@ -18,7 +17,7 @@ SELECT EVENT_TIME                                   as EVENT_TIME,
      -- OneNote host process
  WHERE LOWER(INITIATING_PROCESS_NAME) IN('onenote.exe','onenotem.exe')
      -- commonly abused process for BOI child execution
-     AND
+    AND
         (
         TARGET_PROCESS_NAME IN('vssadmin.exe','certutil.exe','powershell.exe','at.exe','wmic.exe','netstat.exe',
                                 'msxsl.exe','cmd.exe','change.exe','arp.exe','basename.exe','bcdedit.exe','bcp.exe',
@@ -27,9 +26,14 @@ SELECT EVENT_TIME                                   as EVENT_TIME,
                                 'netstat.exe','nltest.exe','nslookup.exe','openfiles','psexec.exe','psexesvc.exe','qwinsta.exe',
                                  'regini.exe','robocopy.exe','runas.exe','rwinsta.exe','ssh.exe','systeminfo.exe','takeown.exe',
                                 'tracert.exe','tree.com','uname.exe','vssadmin.exe','whoami.exe','wusa.exe','xcopy.exe','psexec.exe')
-        OR
-     -- Lolbins executions made with a target file parameter from the path \Temp\OneNote\16.0\Exported\ directory. This basically tells us the file was embedded in the Notebook and wasn’t already on the disk or public share.
-        ( LOWER(TARGET_PROCESS_COMMANDLINE) LIKE '%onenote\\%\\exported\\%\\nt\\%'
-         AND TARGET_PROCESS_NAME IN ('rundll32.exe','mshta.exe','wscript.exe'))
+    OR
+
+           (
+                -- lolbins executions made with a target file parameter from the path \Temp\OneNote\16.0\Exported\ directory. this tells us the file was embedded in the Notebook and wasn’t already on the disk
+               (LOWER(TARGET_PROCESS_COMMANDLINE) LIKE '%onenote\\16.0\\exported\\%\\nt\\%'
+               -- adjustment for OneNote version 14
+               OR LOWER(TARGET_PROCESS_COMMANDLINE) LIKE '%onenote\\14.0\\%\\nt\\%')
+            AND TARGET_PROCESS_NAME IN ('rundll32.exe','mshta.exe','wscript.exe')
+           )
          )
-   AND EVENT_TIME > dateadd(day, -{days_period}, current_timestamp)
+   AND EVENT_TIME > dateadd(day, -{days_interval}, current_timestamp)
