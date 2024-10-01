@@ -18,6 +18,7 @@ WHERE AID IN (
     SELECT DISTINCT AGENT_ID                             AS AGENT_ID
     FROM INVESTIGATION.EDR_PROCESS_CREATION_EVENTS
     WHERE DEVICE_PLATFORM IN ('LINUX', 'MAC')
+      AND PARENT_PROCESS_NAME ILIKE '%foomatic-rip%'
       AND TARGET_PROCESS_NAME IN ('bash', 'dash', 'sh', 'tcsh', 'csh', 'zsh', 'ksh', 'fish', 'rc', 'ash', 'yash', 'elvish', 'mksh', 'loksh', 'xonsh')
       AND (TARGET_PROCESS_COMMANDLINE NOT ILIKE '%/tmp/-foomatic%' OR TARGET_PROCESS_COMMANDLINE NOT ILIKE '%-sDEVICE=ps2write%')
       AND EVENT_TIME > current_timestamp - interval '7d'
