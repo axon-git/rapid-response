@@ -1,0 +1,16 @@
+SELECT PROFILE_LOGIN,
+       ID,
+       STATUS,
+       CREATED,
+       LAST_LOGIN,
+       LAST_UPDATED,
+       PROFILE_FIRST_NAME,
+       PROFILE_LAST_NAME,
+       PROFILE_EMAIL
+FROM (
+         SELECT *,
+                ROW_NUMBER() OVER (PARTITION BY PROFILE_LOGIN ORDER BY LAST_UPDATED DESC) AS row_number
+         FROM RAW.OKTA_USERS
+         WHERE LENGTH(PROFILE_LOGIN) > 51
+     ) AS filtered
+WHERE row_number = 1;
