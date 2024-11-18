@@ -15,4 +15,3 @@ WHERE
     USER_AGENT ILIKE ANY ('%axios/1%', '%axios/0%') 
                                              -- Filter events where the user agent string contains "axios/1" or "axios/0" (case-insensitive)
     AND EVENT_TIME > current_timestamp - interval '180d'
-    AND OBJECT_ID != '00000007-0000-0000-c000-000000000000'
