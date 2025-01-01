@@ -1,0 +1,23 @@
+# The following IOCs were categorized by us as complementary IOCs for being low-fidelity or being potentially related to the malicious chrome extensions campaign
+
+IP Addresses: 
+--------------
+"199.59.243.227",
+"148.72.164.10,
+"148.72.164.11",
+"148.72.173.24",
+"148.72.173.25",
+"148.72.173.26",
+"209.126.127.132",
+"209.126.103.254",
+"15.197.148.33",
+"34.102.136.180",
+"148.72.132.43",
+"148.72.132.6",
+"209.126.103.61"
+
+Domains:
+
+    "sclpfybn.com",
+    "kra18.com",
+    "tnagofsg.com"
