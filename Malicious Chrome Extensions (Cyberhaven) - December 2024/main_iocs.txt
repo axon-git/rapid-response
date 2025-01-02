@@ -69,7 +69,6 @@ Domains:
         "openaigptforgg.site",
         "pieadblock.pro",
         "plutonile.com",
-        "redeem-p2p.org",
         "remiwantnun.com",
         "savechatgpt.site",
         "savegptforchrome.com",
