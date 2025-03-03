@@ -1,0 +1,14 @@
+SELECT EVENT_TIME,
+       OPERATION,
+       ORGANIZATION_ID,
+       WORKLOAD,
+       RESULT_STATUS,
+       OBJECT_ID,
+       USER_ID,
+       CLIENT_IP,
+       RECORD_SPECIFIC_DETAILS:extended_properties.user_agent               AS USER_AGENT,
+       RECORD_SPECIFIC_DETAILS:error_number                                 AS ERROR_NUMBER
+FROM RAW.O365_AUDIT_LOGS
+WHERE USER_AGENT ILIKE '%fasthttp%'
+AND EVENT_TIME BETWEEN '2025-01-15 00:00:01' and '2025-03-01 23:59:01'
+AND NOT ERROR_NUMBER IN ('50053', '50056', '50126')
