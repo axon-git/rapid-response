@@ -1,4 +1,3 @@
--- Detect Azure brute force attempts that succeeded or failed due to MFA.
 SELECT EVENT_TIME,
        CALLER_IP_ADDRESS,
        CATEGORY,
@@ -17,5 +16,6 @@ SELECT EVENT_TIME,
        PROPERTIES:userAgent             AS USER_AGENT
 FROM RAW.AZURE_SIGNIN
 WHERE USER_AGENT ILIKE '%fasthttp%'
-AND EVENT_TIME BETWEEN '2024-12-15 00:00:01' and '2025-01-17 23:59:01'
-AND RESULT_TYPE IN (0,50076) -- successful login or login that failed due to MFA
+-- adjust the timeframe according to your needs
+AND EVENT_TIME BETWEEN '2025-01-15 00:00:01' and '2025-03-02 23:59:01'
+AND NOT RESULT_TYPE IN ('50053', '50056', '50126') -- to remove result types that are related to wrong credentials usage
