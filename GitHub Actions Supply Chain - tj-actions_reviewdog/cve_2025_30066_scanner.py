@@ -71,7 +71,7 @@ def find_secret_base64(file_path):
                         decoded_secret = decode_base64(intermediate)
                         
                         # Check if it contains a secret
-                        if '"isSecret":true' in decoded_secret:
+                        if 'isSecret' in decoded_secret:
                             secret_matches.append((encoded, decoded_secret))
     
     return secret_matches
