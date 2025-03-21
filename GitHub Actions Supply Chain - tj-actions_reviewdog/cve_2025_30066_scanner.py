@@ -3,7 +3,6 @@ import base64
 import re
 import zipfile
 import tempfile
-import shutil
 
 def is_base64(encoded_string):
     """
