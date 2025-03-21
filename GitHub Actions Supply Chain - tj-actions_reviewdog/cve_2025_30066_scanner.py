@@ -104,15 +104,18 @@ def scan_for_secrets(directory):
         directory: Directory path to scan
         
     Returns:
-        dict: Dictionary mapping file paths to their secret matches
+        tuple: (results dictionary, total files scanned, files with secrets)
     """
     results = {}
+    total_files = 0
+    files_with_secrets = 0
     
     # Create a temporary directory for zip extraction
     with tempfile.TemporaryDirectory() as temp_dir:
         for root, _, files in os.walk(directory):
             for file in files:
                 file_path = os.path.join(root, file)
+                total_files += 1
                 
                 # Handle zip files
                 if file.lower().endswith('.zip'):
@@ -125,27 +128,38 @@ def scan_for_secrets(directory):
                         for extracted_root, _, extracted_files in os.walk(zip_extract_path):
                             for extracted_file in extracted_files:
                                 extracted_path = os.path.join(extracted_root, extracted_file)
+                                total_files += 1
                                 matches = find_secret_base64(extracted_path)
                                 if matches:
+                                    files_with_secrets += 1
                                     # Store results with original zip file path
                                     results[f"{file_path}/{os.path.relpath(extracted_path, zip_extract_path)}"] = matches
                 else:
                     # Handle regular files
                     matches = find_secret_base64(file_path)
                     if matches:
+                        files_with_secrets += 1
                         results[file_path] = matches
     
-    return results
+    return results, total_files, files_with_secrets
 
-def print_results(results):
+def print_results(results, total_files, files_with_secrets):
     """
     Print the results in a readable format.
     
     Args:
         results: Dictionary of results from scan_for_secrets
+        total_files: Total number of files scanned
+        files_with_secrets: Number of files containing secrets
     """
+    print("\nScan Summary:")
+    print("-" * 50)
+    print(f"Total files scanned: {total_files}")
+    print(f"Files containing secrets: {files_with_secrets}")
+    print("-" * 50)
+    
     if not results:
-        print("No secret base64 strings found.")
+        print("\nNo secret base64 strings found in any of the scanned files.")
         return
     
     print("\nFound secret base64 strings in the following files:")
@@ -159,6 +173,7 @@ def print_results(results):
             print(f"\nMatch #{i}:")
             print(f"Original: {encoded}")
             print(f"Decoded Secret: {decoded_secret}")
+            
 
 def main():
     print("CVE-2025-30066 - GitHub Actions Supply Chain Vulnerability")
@@ -172,8 +187,8 @@ def main():
         return
     
     print("\nScanning...")
-    results = scan_for_secrets(directory)
-    print_results(results)
+    results, total_files, files_with_secrets = scan_for_secrets(directory)
+    print_results(results, total_files, files_with_secrets)
 
 if __name__ == "__main__":
     main()
